@@ -3,7 +3,7 @@
 %   * Step 1. Edge detection
 % Extracts Edge Map from given image and preprocess it to reduce complexity.
 %   * Step 2. Edge Contours extraction 
-% TODO
+% Extracts Edge Contours from give Edge Map.
 %   * Step 3. Line segment fitting
 % TODO
 %   * Step 4. Curvature related processing
@@ -50,5 +50,10 @@ end
 
 % Remove isolated pixels.
 EdgeMap = bwmorph(EdgeMap,'clean');
+
+%% Step 2. Edge Contours extraction
+
+% Extract Edge Contours using preprocessed EdgeMap.
+EdgeContours = extractEdgeContours(EdgeMap);
 
 end
