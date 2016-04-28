@@ -5,7 +5,7 @@
 %   * Step 2. Edge Contours extraction 
 % Extracts Edge Contours from give Edge Map.
 %   * Step 3. Line segment fitting
-% TODO
+% Extracts Line Segments fitting on the Edge Contour. 
 %   * Step 4. Curvature related processing
 % TODO
 %
@@ -15,10 +15,13 @@ function edgeProcessing(im)
 
 %% Initialize
 
-% For edge detection
+% For edge detection.
 T_low = 0.3;
 T_high = 0.4;
 sigma = 1;
+
+% For Line segment fitting.
+DeviationThreshold = 2;
 
 %% Preprocess image
 
@@ -55,5 +58,18 @@ EdgeMap = bwmorph(EdgeMap,'clean');
 
 % Extract Edge Contours using preprocessed EdgeMap.
 EdgeContours = extractEdgeContours(EdgeMap);
+
+% Draw Edge Contours
+drawLineSegments(size(EdgeMap), EdgeContours);
+
+
+%% Step 3. Line segment fitting 
+
+% Extract Line Segments fitting on the Edge Contour. 
+SegmentList = lineSegmentFitting(EdgeContours, DeviationThreshold);
+
+% Draw Segment Lines
+drawLineSegments(size(EdgeMap), SegmentList);
+
 
 end
