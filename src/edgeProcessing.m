@@ -3,15 +3,18 @@
 %   * Step 1. Edge detection
 % Extracts Edge Map from given image and preprocess it to reduce complexity.
 %   * Step 2. Edge Contours extraction 
-% Extracts Edge Contours from give Edge Map.
+% Extracts Edge Contours from given Edge Map.
 %   * Step 3. Line segment fitting
 % Extracts Line Segments fitting on the Edge Contour. 
-%   * Step 4. Curvature related processing
-% TODO
+%   * Step 4. Detecting edge portions with Smooth Curvatures.
+% Classify edges using Curvatures so that every edge doesn't have a sudden
+% change which is called sharp turn and a inflexion point.
 %
 % Input     - im : 'jpg' image which taken by normal smart phone.
+% Output    - SmoothCurvatures = The list of edges with Smooth Curvature.
+%             Each of them doesn't have any sharp turn and inflexion point.
 
-function edgeProcessing(im)
+function SmoothCurvatures = edgeProcessing(im)
 
 %% Initialize
 
@@ -22,6 +25,9 @@ sigma = 1;
 
 % For Line segment fitting.
 DeviationThreshold = 2;
+
+% For Smooth Curvatures.
+SharpTurnThreshold = 90;
 
 %% Preprocess image
 
@@ -62,7 +68,6 @@ EdgeContours = extractEdgeContours(EdgeMap);
 % Draw Edge Contours
 drawLineSegments(size(EdgeMap), EdgeContours);
 
-
 %% Step 3. Line segment fitting 
 
 % Extract Line Segments fitting on the Edge Contour. 
@@ -71,5 +76,12 @@ SegmentList = lineSegmentFitting(EdgeContours, DeviationThreshold);
 % Draw Segment Lines
 drawLineSegments(size(EdgeMap), SegmentList);
 
+%% Step 4. Detecting edge portions with Smooth Curvatures.
+
+% Classify Smooth Curvatures.
+SmoothCurvatures = classifySmoothCurvatures(SegmentList, SharpTurnThreshold);
+
+% Draw Smooth Curvatures.
+drawLineSegments(size(EdgeMap), SmoothCurvatures);
 
 end
