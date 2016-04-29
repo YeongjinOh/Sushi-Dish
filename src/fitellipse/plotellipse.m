@@ -13,9 +13,6 @@ function varargout = plotellipse(varargin)
 %
 %   PLOTELLIPSE(..., LineSpec) passes the LineSpec string to the plot
 %       command (e.g. 'r--')
-%
-%   PLOTELLIPSE(Hax, ...) plots into the axes specified by the axes handle
-%       Hax
 %   
 %   H = PLOTELLIPSE(...) returns a handle to the created lineseries object
 %       created by the plot command
@@ -35,14 +32,6 @@ function varargout = plotellipse(varargin)
 
 error(nargchk(4, 6, nargin, 'struct'));
 error(nargchk(0, 1, nargout, 'struct'));
-
-% Parse and check inputs
-if ishandle(varargin{1})
-    hAx = varargin{1};
-    varargin(1) = [];
-else
-    hAx = gca();
-end
 
 % Ellipse centre
 z = varargin{1};
@@ -83,7 +72,7 @@ Q = [cos(alpha), -sin(alpha); sin(alpha) cos(alpha)];
 X = Q * [a * cos(t); b * sin(t)] + repmat(z, 1, npts);
 
 % The actual plotting one-liner
-h = plot(hAx, X(1,:), X(2,:), linespec);
+h = plot(X(2,:), X(1,:), linespec, 'LineWidth', 1);
 
 % Return the handle if asked for
 if nargout == 1

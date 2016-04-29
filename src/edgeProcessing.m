@@ -11,12 +11,18 @@
 % change which is called sharp turn and a inflexion point.
 %
 % Input     - im : 'jpg' image which taken by normal smart phone.
-% Output    - SmoothCurvatures = The list of edges with Smooth Curvature.
+% Output    - ResizedIm : (possibly) resized image.
+%             SmoothCurvatures = The list of edges with Smooth Curvature.
 %             Each of them doesn't have any sharp turn and inflexion point.
 
-function SmoothCurvatures = edgeProcessing(im)
+function [ResizedIm, SmoothCurvatures] = edgeProcessing(im, showFigures)
 
 %% Initialize
+
+% Set default parameters
+if nargin < 2
+    showFigures = true;
+end
 
 % For edge detection.
 T_low = 0.3;
@@ -35,6 +41,7 @@ SharpTurnThreshold = 90;
 if size(im,1) * size(im,2) > 1000000
     im = imresize(im, 0.1);
 end
+ResizedIm = im;
 
 % Convert RGB to gray.
 im = rgb2gray(im);
@@ -66,7 +73,9 @@ EdgeMap = bwmorph(EdgeMap,'clean');
 EdgeContours = extractEdgeContours(EdgeMap);
 
 % Draw Edge Contours
-drawLineSegments(size(EdgeMap), EdgeContours);
+if showFigures
+    drawLineSegments(size(EdgeMap), EdgeContours);
+end
 
 %% Step 3. Line segment fitting 
 
@@ -74,7 +83,9 @@ drawLineSegments(size(EdgeMap), EdgeContours);
 SegmentList = lineSegmentFitting(EdgeContours, DeviationThreshold);
 
 % Draw Segment Lines
-drawLineSegments(size(EdgeMap), SegmentList);
+if showFigures
+    drawLineSegments(size(EdgeMap), SegmentList);
+end
 
 %% Step 4. Detecting edge portions with Smooth Curvatures.
 
@@ -82,6 +93,8 @@ drawLineSegments(size(EdgeMap), SegmentList);
 SmoothCurvatures = classifySmoothCurvatures(SegmentList, SharpTurnThreshold);
 
 % Draw Smooth Curvatures.
-drawLineSegments(size(EdgeMap), SmoothCurvatures);
+if showFigures
+    drawLineSegments(size(EdgeMap), SmoothCurvatures);
+end
 
 end

@@ -73,7 +73,7 @@ error(nargchk(1, 5, nargin, 'struct'))
 
 % Default parameters
 params.fNonlinear = true;
-params.constraint = 'bookstein';
+params.constraint = 'trace';
 params.maxits     = 200;
 params.tol        = 1e-5;
 
@@ -321,9 +321,9 @@ if size(x, 1) ~= 2
     error('fitellipse:InvalidDimension', ...
         'Input matrix must be two dimensional')
 end
-if size(x, 2) < 6
+if size(x, 2) < 5
     error('fitellipse:InsufficientPoints', ...
-        'At least 6 points required to compute fit')
+        'At least 5 points required to compute fit')
 end
 
 
