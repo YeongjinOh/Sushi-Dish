@@ -8,15 +8,14 @@
 function SmoothCurvatures = classifySmoothCurvatures(SegmentList, SharpTurnThreshold)
 
 %% Initialize
-SmoothCurvatures = SegmentList;
-NumberOfEdges = length(SmoothCurvatures);
+NumberOfEdges = length(SegmentList);
 
-% Detect edge portions with smooth curvatures for each edge.
+%% Detect edge portions with smooth curvatures for each edge.
 EdgeIndex = 1;
 while EdgeIndex <= NumberOfEdges
     
     % Take edge of number EdgeIndex.
-    LineSegments = SmoothCurvatures{EdgeIndex};
+    LineSegments = SegmentList{EdgeIndex};
     NumberOfPoints = length(LineSegments);
     
     % To deal with inflexion points, use the sign of the angle as direction.
@@ -41,9 +40,9 @@ while EdgeIndex <= NumberOfEdges
                 % point. To do that, replace this edge with
                 % Left-portion-edge and insert the remaining edge at the
                 % last of Segment list.
-                SmoothCurvatures{EdgeIndex} = LineSegments(1:PointIndex,:);
+                SegmentList{EdgeIndex} = LineSegments(1:PointIndex,:);
                 NumberOfEdges = NumberOfEdges + 1;
-                SmoothCurvatures{NumberOfEdges} = LineSegments(PointIndex:NumberOfPoints,:);
+                SegmentList{NumberOfEdges} = LineSegments(PointIndex:NumberOfPoints,:);
                 
                 % After split, terminate the loop for this edge and
                 % continue for the remaining edges.
@@ -65,9 +64,9 @@ while EdgeIndex <= NumberOfEdges
                     % point. To do that, replace this edge with
                     % Left-portion-edge and insert the remaining edge at
                     % the last of Segment list.
-                    SmoothCurvatures{EdgeIndex} = LineSegments(1:PointIndex,:);
+                    SegmentList{EdgeIndex} = LineSegments(1:PointIndex,:);
                     NumberOfEdges = NumberOfEdges + 1;
-                    SmoothCurvatures{NumberOfEdges} = LineSegments(PointIndex:NumberOfPoints,:);
+                    SegmentList{NumberOfEdges} = LineSegments(PointIndex:NumberOfPoints,:);
                     
                     % After split, terminate the loop for this edge and
                     % continue for the remaining edges.
@@ -78,6 +77,18 @@ while EdgeIndex <= NumberOfEdges
     end
     EdgeIndex = EdgeIndex + 1;
 end
+
+%% Collect the curved segments only by filtering out the line segments.
+SmoothCurvatures = cell(1, 1);
+CurveIndex = 0;
+for SegIndex = 1 : length(SegmentList)
+    Segment = SegmentList{SegIndex};
+    if length(Segment) > 2
+        CurveIndex = CurveIndex + 1;
+        SmoothCurvatures{CurveIndex} = Segment;
+    end
+end
+
 end
 
 % calcAngleBetweenTwoVectors2D calculates the angle between two vectors.
