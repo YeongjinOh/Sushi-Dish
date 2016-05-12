@@ -44,7 +44,7 @@ for i = 1 : N
     Alphas(i) = Ellipse.Alpha;
 end
 
-Inliers = cell(1, 1);
+Inliers = cell(1, 0);
 M = 0;
 for i = 1 : N
     if abs(Alphas(i) + pi/2) < Threshold
@@ -77,7 +77,7 @@ for i = 1 : N
     end
 end
 
-Inliers = cell(1, 1);
+Inliers = cell(1, 0);
 M = 0;
 for i = 1 : N
     if InliersIDX(i)
@@ -102,7 +102,10 @@ end
 
 [Y, I] = sort(Y, 'descend');
 
-Inliers = cell(1, 1);
+Inliers = cell(1, 0);
+if N == 0
+    return
+end
 Inliers{1} = Ellipses{I(1)};
 M = 1;
 
@@ -119,7 +122,7 @@ end
 function [Ellipses] = fitEllipses(Segments)
 % 각 segment를 ellipse로 fiiting 시도하여, fitting 된 ellipse만 리턴
 
-Ellipses = cell(1, 1);
+Ellipses = cell(1, 0);
 NumberOfEllipses = 0;
 for i = 1 : length(Segments)
     Segment = Segments{i};
