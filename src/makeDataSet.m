@@ -34,7 +34,7 @@ function [result, labels, set] = makeDataSet()
                if x
                   % Update result
                   lab = input('Label of feature? :\n');
-                  labels = [labels ; lab];
+                  labels = [labels lab];
                   result = cat(4,result,feature);
                   tot_cnt = tot_cnt + 1;
                   close;
@@ -43,4 +43,7 @@ function [result, labels, set] = makeDataSet()
         end
     end    
     set = ones(1,tot_cnt);    
+    % Code to check if dataset is correct 
+    % size( data(:,:,:,find(labels==1)) );
+    % montage(data(:,:,:,find(labels==1)));
 end
