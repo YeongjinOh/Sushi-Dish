@@ -25,7 +25,7 @@ if nargin < 2
 end
 
 % For edge detection.
-T_low = 0.3;
+T_low = 0.2;
 T_high = 0.4;
 sigma = 1;
 
@@ -38,13 +38,16 @@ SharpTurnThreshold = 90;
 %% Preprocess image
 
 % Resize if input image is too high resolution.
-if size(im,1) * size(im,2) > 1000000
-    im = imresize(im, 0.1);
+larger_side = max(size(im,1), size(im,2));
+max_side = 800;
+if larger_side > max_side
+    im = imresize(im, max_side/larger_side);
 end
 ResizedIm = im;
 
 % Convert RGB to gray.
 im = rgb2gray(im);
+im = histeq(im);
 
 %% Step 1. Edge detection
 

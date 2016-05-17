@@ -14,9 +14,10 @@ addpath('fitellipse');
 Ellipses = fitEllipses(Segments);
 
 % 타원이 Y축 방향으로 쌓여 있다고 가정하고 filtering
-Ellipses = filterByTilt(Ellipses, 5/180*pi);
+Ellipses = filterByTilt(Ellipses, 6/180*pi);
 Ellipses = filterByMostFrequentX(Ellipses, size(ResizedIm,2) / 10);
-Ellipses = filterDoubleLine(Ellipses, size(ResizedIm,1) / 50);
+Ellipses = filterByMostFrequentA(Ellipses, 0.16);
+Ellipses = filterDoubleLine(Ellipses, size(ResizedIm,1) / 40);
 
 % show image to test
 figure;
@@ -48,6 +49,40 @@ Inliers = cell(1, 0);
 M = 0;
 for i = 1 : N
     if abs(Alphas(i) + pi/2) < Threshold
+        M = M + 1;
+        Inliers{M} = Ellipses{i};
+    end
+end
+
+end
+
+%%
+function [Inliers] = filterByMostFrequentA(Ellipses, Threshold)
+% RANSAN을 장반경 대해서 적용
+% Threshold는 Candidate의 A에 비례해서 적용
+
+N = length(Ellipses);
+As = zeros(1, N);
+for i = 1 : N
+    Ellipse = Ellipses{i};
+    As(i) = Ellipse.A;
+end
+
+MaxNum = 0;
+InliersIDX = [];
+for i = 1 : N
+    CandidateA = As(i);
+    IDX = abs(As - CandidateA) < CandidateA * Threshold;
+    if sum(IDX) > MaxNum
+        MaxNum = sum(IDX);
+        InliersIDX = IDX;
+    end
+end
+
+Inliers = cell(1, 0);
+M = 0;
+for i = 1 : N
+    if InliersIDX(i)
         M = M + 1;
         Inliers{M} = Ellipses{i};
     end
