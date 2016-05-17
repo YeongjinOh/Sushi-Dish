@@ -1,4 +1,4 @@
-function [Ellipses] = detectEllipses(I)
+function [Ellipses, ResizedIm] = detectEllipses(I, showFigures)
 % RGB 이미지를 받아서 각 접시에 해당하는 타원을 검출하는 함수
 % Ellipses{i}는 Z, A, B, Alpha를 갖는 struct (fitellipse 함수 참조)
 
@@ -8,7 +8,7 @@ addpath('fitellipse');
 %% Detect dishes
 
 % process edge
-[ResizedIm, Segments] = edgeProcessing(I, false);
+[ResizedIm, Segments] = edgeProcessing(I, showFigures);
 
 % fit ellipses
 Ellipses = fitEllipses(Segments);
@@ -20,14 +20,16 @@ Ellipses = filterByMostFrequentA(Ellipses, 0.16);
 Ellipses = filterDoubleLine(Ellipses, size(ResizedIm,1) / 40);
 
 % show image to test
-figure;
-imshow(ResizedIm);
-hold on;
-for i = 1 : length(Ellipses)
-    Ellipse = Ellipses{i};
-    plotellipse(Ellipse.Z, Ellipse.A, Ellipse.B, Ellipse.Alpha, 'r');
+if showFigures
+    figure;
+    imshow(ResizedIm);
+    hold on;
+    for i = 1 : length(Ellipses)
+        Ellipse = Ellipses{i};
+        plotellipse(Ellipse.Z, Ellipse.A, Ellipse.B, Ellipse.Alpha, 'r');
+    end
+    hold off;
 end
-hold off;
 
 %% Reset added paths
 rmpath('fitellipse');

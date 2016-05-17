@@ -5,7 +5,7 @@
 %           - n : Dish number.
 % output    - FeatureImage : The Feature Image in circle-coordinate
 %                   extracted from the dish image in ellipse-coordinate.
-function FeatureImage = extractFeatureImage(ResizedIm, Ellipses, n)
+function FeatureImage = extractFeatureImage(ResizedIm, Ellipses, n, showFigures)
 
 %% Check if n is correct input
 if n < 1 || n > length(Ellipses)
@@ -73,8 +73,11 @@ for i = -FeatureRadius:FeatureRadius
         end
     end
 end
-figure;
-imshow(FeatureImage);
+
+if showFigures
+    figure;
+    imshow(FeatureImage);
+end
 
 end
 

@@ -12,37 +12,38 @@
 % 1: train , 2: val , 3: test
 
 function [result, labels, set] = makeDataSet()
-    dirname = '../../Set1';
+    close all;
+    figure;
+    dirname = 'images/stacked';
     d = dir(dirname);
     result = [];
     labels = [];
     tot_cnt = 0;
-    for i = 3:length(d)    
+    for i = 3:length(d)
         if strcmp(d(i).name,'Thumbs.db') ~= 1
             fname = sprintf('%s\\%s',dirname,d(i).name);
             im = imread(fname);
             display(sprintf('Processing : %s\n',fname));
-            im_re = imresize(im,0.1);
             % Detects Ellipses from image
-            el = detectEllipses(im);            
+            [el, im_re] = detectEllipses(im, false);
+            subplot(1, 2, 1);
+            imshow(im_re);
             loop_cnt = numel(el);
             for j=1:loop_cnt
-               feature = extractFeatureImage(im_re,el,j);
-               close all;
+               feature = extractFeatureImage(im_re,el,j, false);
+               subplot(1, 2, 2);
                imshow(feature);
-               x = input('Save feature? Yes 1 / No 0 :\n');               
-               if x
+               lab = input('Label of feature? (input 0 to throw it out) :\n');
+               if lab ~= 0
                   % Update result
-                  lab = input('Label of feature? :\n');
                   labels = [labels lab];
                   result = cat(4,result,feature);
                   tot_cnt = tot_cnt + 1;
-                  close;
-               end             
-            end            
+               end
+            end
         end
-    end    
-    set = ones(1,tot_cnt);    
+    end
+    set = ones(1,tot_cnt);
     % Code to check if dataset is correct 
     % size( data(:,:,:,find(labels==1)) );
     % montage(data(:,:,:,find(labels==1)));
