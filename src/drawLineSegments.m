@@ -9,7 +9,6 @@ function drawLineSegments(MapSize, LineSegments)
 NumberOfSegments = length(LineSegments);
 
 % Default setting for plot.
-figure;
 hold on;
 minx = 1; maxx = MapSize(2);
 miny = 1; maxy = MapSize(1);
