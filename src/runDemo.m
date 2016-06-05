@@ -10,8 +10,8 @@ load('net-epoch-57.mat');
 
 %% Detection and Classification
 close all;
-filename = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files'});
-im = imread(filename);
+[filename, pathname, ~] = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files'});
+im = imread(fullfile(pathname, filename));
 
 [ellipses, resized_im] = detectEllipses(im, true);
 num_of_ellipses = length(ellipses);
