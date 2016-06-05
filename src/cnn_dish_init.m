@@ -1,5 +1,6 @@
-function net = cnn_mnist_init(varargin)
-% CNN_MNIST_LENET Initialize a CNN similar for MNIST
+function net = cnn_dish_init(varargin)
+% CNN Dish Initialization
+%
 opts.batchNormalization = true ;
 opts.networkType = 'simplenn' ;
 opts = vl_argparse(opts, varargin) ;
@@ -10,7 +11,7 @@ rng(0) ;
 f=1/100 ;
 net.layers = {} ;
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{f*randn(5,5,1,20, 'single'), zeros(1, 20, 'single')}}, ...
+                           'weights', {{f*randn(27,77,3,20, 'single'), zeros(1, 20, 'single')}}, ...
                            'stride', 1, ...
                            'pad', 0) ;
 net.layers{end+1} = struct('type', 'pool', ...
@@ -33,7 +34,7 @@ net.layers{end+1} = struct('type', 'conv', ...
                            'pad', 0) ;
 net.layers{end+1} = struct('type', 'relu') ;
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{f*randn(1,1,500,10, 'single'), zeros(1,10,'single')}}, ...
+                           'weights', {{f*randn(1,1,500,8, 'single'), zeros(1,8,'single')}}, ...
                            'stride', 1, ...
                            'pad', 0) ;
 net.layers{end+1} = struct('type', 'softmaxloss') ;
@@ -46,9 +47,9 @@ if opts.batchNormalization
 end
 
 % Meta parameters
-net.meta.inputSize = [28 28 1] ;
+net.meta.inputSize = [50 100 3] ;
 net.meta.trainOpts.learningRate = 0.001 ;
-net.meta.trainOpts.numEpochs = 20 ;
+net.meta.trainOpts.numEpochs = 100 ;
 net.meta.trainOpts.batchSize = 100 ;
 
 % Fill in defaul values

@@ -1,20 +1,25 @@
-function [net, info] = cnn_mnist(varargin)
+function [net, info] = cnn_dish(varargin)
 %CNN_MNIST  Demonstrates MatConvNet on MNIST
 
-run(fullfile(fileparts(mfilename('fullpath')),...
-  '..', '..', 'matlab', 'vl_setupnn.m')) ;
+% Setup path. change to your machine specific path
+% hardcode directory for Window7 && gpu version issue. 
+setup_path = 'D:\matconvnet\matlab';
+cur_dir = 'C:\Users\son\Desktop\Sushi-Dish\src';
 
+run(fullfile(setup_path, 'vl_setupnn.m'));
+
+% Arguement processing
 opts.batchNormalization = false ;
 opts.networkType = 'simplenn' ;
 [opts, varargin] = vl_argparse(opts, varargin) ;
 
 sfx = opts.networkType ;
 if opts.batchNormalization, sfx = [sfx '-bnorm'] ; end
-opts.expDir = fullfile(vl_rootnn, 'data', ['mnist-baseline-' sfx]) ;
+opts.expDir = cur_dir;
 [opts, varargin] = vl_argparse(opts, varargin) ;
 
-opts.dataDir = fullfile(vl_rootnn, 'data', 'mnist') ;
-opts.imdbPath = fullfile(opts.expDir, 'imdb.mat');
+opts.dataDir = cur_dir;
+opts.imdbPath = fullfile(cur_dir, 'imdb.mat');
 opts.train = struct() ;
 opts = vl_argparse(opts, varargin) ;
 if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
@@ -23,18 +28,15 @@ if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end;
 %                                                         Prepare data
 % --------------------------------------------------------------------
 
-net = cnn_mnist_init('batchNormalization', opts.batchNormalization, ...
+net = cnn_dish_init('batchNormalization', opts.batchNormalization, ...
                      'networkType', opts.networkType) ;
 
 if exist(opts.imdbPath, 'file')
+  display(sprintf('(Sushi-Dish) Loading File : %s\n',opts.imdbPath));
   imdb = load(opts.imdbPath) ;
-else
-  imdb = getMnistImdb(opts) ;
-  mkdir(opts.expDir) ;
-  save(opts.imdbPath, '-struct', 'imdb') ;
 end
 
-net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),1:10,'UniformOutput',false) ;
+net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),1:8,'UniformOutput',false) ;
 
 % --------------------------------------------------------------------
 %                                                                Train
@@ -49,7 +51,8 @@ end
   'expDir', opts.expDir, ...
   net.meta.trainOpts, ...
   opts.train, ...
-  'val', find(imdb.images.set == 3)) ;
+  'val', find(imdb.images.set == 2)) ;
+% Validation Set 
 
 % --------------------------------------------------------------------
 function fn = getBatch(opts)
