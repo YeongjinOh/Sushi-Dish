@@ -10,3 +10,6 @@ Implementation details are in the paper :
 #### Demo
 
 After modifying the path setting in demo script *'runDemo'*, you can run demo program using this script.
+
+* Installation instructions for MatConvNet: http://www.vlfeat.org/matconvnet/
+* Pre-trained CNN: `imdb.mat`: https://goo.gl/gI5FPQ, `net-epoch-57.mat`: https://goo.gl/gdlm10
